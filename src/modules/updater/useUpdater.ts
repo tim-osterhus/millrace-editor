@@ -2,8 +2,9 @@ import { relaunch } from "@tauri-apps/plugin-process";
 import { check, type Update } from "@tauri-apps/plugin-updater";
 import { useCallback, useEffect, useState } from "react";
 
-const LAST_CHECK_KEY = "terax:updater:last-check";
+const LAST_CHECK_KEY = "millrace-editor:updater:last-check";
 const CHECK_INTERVAL_MS = 30 * 60 * 1000;
+const UPDATER_RELEASE_CHANNEL_CONFIGURED = false;
 
 export type UpdaterStatus =
   | { kind: "idle" }
@@ -28,6 +29,13 @@ export function useUpdater({ autoCheck = true }: HookOptions = {}) {
   const [status, setStatus] = useState<UpdaterStatus>({ kind: "idle" });
 
   const runCheck = useCallback(async ({ manual }: Options = {}) => {
+    if (!UPDATER_RELEASE_CHANNEL_CONFIGURED) {
+      setStatus({
+        kind: "error",
+        message: "Updates are not configured for this Millrace Editor build.",
+      });
+      return;
+    }
     if (!manual) {
       const last = Number(localStorage.getItem(LAST_CHECK_KEY) ?? 0);
       if (Date.now() - last < CHECK_INTERVAL_MS) return;
