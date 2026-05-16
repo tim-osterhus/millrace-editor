@@ -56,6 +56,13 @@ Millrace Editor is a desktop AI development workbench derived from Terax. It kee
 - `MILLRACE_EDITOR.md` for project memory and configuration
 - Tasks, plans, search, file read/write tools with approval flow
 
+**Millrace Workbench**
+- Work item rail with queue, branch, state, and approval signals
+- Plan and trace inspector beside the active editor/terminal workspace
+- Approval cards with work item, plan, evidence, trace, and risk context
+- Governed-work composer context attached to prompts by default
+- Fixture-backed Tauri bridge ready for the native Millrace runtime
+
 **Quality**
 - Lightweight and fast (~7 MB bundle)
 - API keys stored in the OS keychain 
@@ -106,6 +113,10 @@ cd src-tauri && cargo clippy    # Rust lint
 ## Tech stack
 
 Tauri 2 · Rust · `portable-pty` · React 19 · TypeScript · xterm.js · CodeMirror 6 · Vercel AI SDK v6 · Tailwind v4 · shadcn/ui · Zustand
+
+## Millrace Runtime Bridge
+
+The first Millrace integration is fixture-backed but uses the real native contract shape. See [docs/millrace-runtime-bridge.md](docs/millrace-runtime-bridge.md) for the command surface and runtime swap path.
 
 ## Contributing
 
