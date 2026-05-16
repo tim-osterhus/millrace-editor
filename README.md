@@ -1,11 +1,10 @@
 <div align="center">
-  <img src="public/logo.png" width="144" height="144" alt="Terax" />
-  <h1>Terax</h1>
+  <img src="public/logo.png" width="144" height="144" alt="Millrace Editor" />
+  <h1>Millrace Editor</h1>
 
-  <p><strong>Open-source lightweight cross-platform AI-native terminal (ADE)</strong></p>
+  <p><strong>Terax-derived AI-native development workbench with governed Millrace workflows</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/version-0.5.9-blue" alt="version" />
     <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="license" />
     <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="platform" />
 
@@ -14,7 +13,7 @@
 
 ---
 
-Terax is a fast, lightweight AI terminal (ADE) built on Tauri 2 + Rust and React 19. It pairs a native PTY backend with a modern UI — multi-tab terminals, an integrated code editor, a file explorer, and a first-class AI side-panel that works with your own API keys (or fully local models via LM Studio). Under 10 MB on disk, no telemetry, keys stored in the OS keychain.
+Millrace Editor is a desktop AI development workbench derived from Terax. It keeps the lightweight editor, terminal, file explorer, web preview, BYOK AI composer, approval cards, diff review, and local keychain model, then adds first-class Millrace work lifecycle surfaces for governed AI work: work items, plans, queues, approvals, traces, loop packs, repair, and evidence.
 
 ## Screenshots
 
@@ -54,7 +53,7 @@ Terax is a fast, lightweight AI terminal (ADE) built on Tauri 2 + Rust and React
 - Local / offline models via LM Studio
 - Voice input, edit diffs, multi-agent and sub-agents
 - Snippets / skills, customizable system prompt
-- `TERAX.md` for project memory and configuration
+- `MILLRACE_EDITOR.md` for project memory and configuration
 - Tasks, plans, search, file read/write tools with approval flow
 
 **Quality**
@@ -70,18 +69,18 @@ The default shell is detected in this order: `pwsh.exe` (PowerShell 7+) → `pow
 
 ## Linux notes
 
-- **Blank window / `EGL_BAD_PARAMETER`**: WebKitGTK's hardware (DMA-BUF) renderer fails on some Wayland setups (wlroots compositors, NVIDIA's proprietary driver, minimal sessions). Terax disables it automatically when it detects one of these; if you still get a blank window or an EGL error, escalate in order:
-  1. `WEBKIT_DISABLE_DMABUF_RENDERER=1 ./Terax_*.AppImage` (`=0` forces the hardware path back on)
-  2. `WEBKIT_DISABLE_COMPOSITING_MODE=1 ./Terax_*.AppImage`
-  3. `LIBGL_ALWAYS_SOFTWARE=1 ./Terax_*.AppImage` (software rendering — slow, last resort)
+- **Blank window / `EGL_BAD_PARAMETER`**: WebKitGTK's hardware (DMA-BUF) renderer fails on some Wayland setups (wlroots compositors, NVIDIA's proprietary driver, minimal sessions). Millrace Editor disables it automatically when it detects one of these; if you still get a blank window or an EGL error, escalate in order:
+  1. `WEBKIT_DISABLE_DMABUF_RENDERER=1 ./Millrace_Editor_*.AppImage` (`=0` forces the hardware path back on)
+  2. `WEBKIT_DISABLE_COMPOSITING_MODE=1 ./Millrace_Editor_*.AppImage`
+  3. `LIBGL_ALWAYS_SOFTWARE=1 ./Millrace_Editor_*.AppImage` (software rendering — slow, last resort)
   4. Install the **`.deb` / `.rpm`** instead — they use your system's GTK/GPU libraries directly and sidestep AppImage bundling conflicts entirely.
-- **AppImage**: needs FUSE. On systems without it, run `./Terax_*.AppImage --appimage-extract-and-run`.
-- **NixOS**: prebuilt binaries can't see the system GPU stack, so the AppImage may fail with an EGL error regardless of the above. Run it through `nix run nixpkgs#appimage-run -- ./Terax_*.AppImage`, use `nixGL`, or build from source.
+- **AppImage**: needs FUSE. On systems without it, run `./Millrace_Editor_*.AppImage --appimage-extract-and-run`.
+- **NixOS**: prebuilt binaries can't see the system GPU stack, so the AppImage may fail with an EGL error regardless of the above. Run it through `nix run nixpkgs#appimage-run -- ./Millrace_Editor_*.AppImage`, use `nixGL`, or build from source.
 
 ## Configure AI
 
 1. Open **Settings → AI**.
-2. Pick a provider and paste your API key. For local inference, point Terax at your LM Studio endpoint.
+2. Pick a provider and paste your API key. For local inference, point Millrace Editor at your LM Studio endpoint.
 3. Keys are written to the OS keychain via `keyring` — they never touch disk or `localStorage`.
 
 ## Build from source
@@ -114,7 +113,7 @@ Issues and PRs are welcome! Feel free to open issues, suggest features, or submi
 
 ## License
 
-Terax is licensed under the Apache-2.0 License. For more information on our dependencies, see [Apache License 2.0](LICENSE).
+Millrace Editor is licensed under the Apache-2.0 License. For more information on our dependencies, see [Apache License 2.0](LICENSE).
 
 ## Provenance
 

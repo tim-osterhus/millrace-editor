@@ -6,13 +6,15 @@ import type { ProviderKeys } from "./keyring";
 import { native } from "./native";
 import type { ToolContext } from "../tools/tools";
 
-const TERAX_MD_MAX_BYTES = 32 * 1024;
+const MILLRACE_EDITOR_MD_MAX_BYTES = 32 * 1024;
 type MemoryCacheEntry = { content: string | null; mtime: number };
 const projectMemoryCache = new Map<string, MemoryCacheEntry>();
 
-async function readTeraxMd(workspaceRoot: string | null): Promise<string | null> {
+async function readMillraceEditorMd(
+  workspaceRoot: string | null,
+): Promise<string | null> {
   if (!workspaceRoot) return null;
-  const path = `${workspaceRoot.replace(/\/$/, "")}/TERAX.md`;
+  const path = `${workspaceRoot.replace(/\/$/, "")}/MILLRACE_EDITOR.md`;
   const cached = projectMemoryCache.get(workspaceRoot);
   // Cache for 30s — cheap re-read after that to pick up edits.
   if (cached && Date.now() - cached.mtime < 30_000) return cached.content;
@@ -23,8 +25,8 @@ async function readTeraxMd(workspaceRoot: string | null): Promise<string | null>
       return null;
     }
     const content =
-      r.content.length > TERAX_MD_MAX_BYTES
-        ? r.content.slice(0, TERAX_MD_MAX_BYTES)
+      r.content.length > MILLRACE_EDITOR_MD_MAX_BYTES
+        ? r.content.slice(0, MILLRACE_EDITOR_MD_MAX_BYTES)
         : r.content;
     projectMemoryCache.set(workspaceRoot, { content, mtime: Date.now() });
     return content;
@@ -62,7 +64,7 @@ export function createContextAwareTransport(deps: Deps) {
       [k: string]: unknown;
     }) {
       const live = deps.getLive();
-      const projectMemory = await readTeraxMd(live.workspaceRoot);
+      const projectMemory = await readMillraceEditorMd(live.workspaceRoot);
       const agent = await createTeraxAgent({
         keys: deps.getKeys(),
         modelId: deps.getModelId(),
@@ -83,7 +85,7 @@ export function createContextAwareTransport(deps: Deps) {
     },
     async reconnectToStream(options: unknown) {
       const live = deps.getLive();
-      const projectMemory = await readTeraxMd(live.workspaceRoot);
+      const projectMemory = await readMillraceEditorMd(live.workspaceRoot);
       const agent = await createTeraxAgent({
         keys: deps.getKeys(),
         modelId: deps.getModelId(),
