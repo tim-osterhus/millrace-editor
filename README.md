@@ -115,3 +115,9 @@ Issues and PRs are welcome! Feel free to open issues, suggest features, or submi
 ## License
 
 Terax is licensed under the Apache-2.0 License. For more information on our dependencies, see [Apache License 2.0](LICENSE).
+
+## Provenance
+
+Millrace Editor is derived from [Terax](https://github.com/crynta/terax-ai),
+which is licensed under Apache-2.0. See [NOTICE](NOTICE) and
+[docs/provenance/terax-import.md](docs/provenance/terax-import.md).

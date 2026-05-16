@@ -1,0 +1,13 @@
+Millrace Editor
+
+This product includes source code derived from Terax, an Apache-2.0 licensed
+open-source AI-native terminal and editor project.
+
+Upstream project:
+  Name: Terax
+  Repository: https://github.com/crynta/terax-ai
+  License: Apache-2.0
+
+The imported Terax source has been renamed and modified to build Millrace
+Editor, a Terax-derived AI-native development workbench with first-class
+Millrace governed work lifecycle surfaces.
