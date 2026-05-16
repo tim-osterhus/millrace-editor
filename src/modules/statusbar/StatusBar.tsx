@@ -4,6 +4,11 @@ import {
   AiStatusBarControls,
 } from "@/modules/ai/components/AiStatusBarControls";
 import { useChatStore } from "@/modules/ai";
+import {
+  MillraceStatusChips,
+  type MillraceApproval,
+  type MillraceWorkItem,
+} from "@/modules/millrace";
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { CwdBreadcrumb } from "./CwdBreadcrumb";
@@ -19,6 +24,8 @@ type Props = {
   /** When set, render a one-click "Open preview" chip pointing at this URL. */
   detectedPreviewUrl?: string | null;
   onOpenPreview?: () => void;
+  millraceWorkItem?: MillraceWorkItem;
+  millraceApprovals?: MillraceApproval[];
 };
 
 export function StatusBar({
@@ -30,6 +37,8 @@ export function StatusBar({
   hasComposer,
   detectedPreviewUrl,
   onOpenPreview,
+  millraceWorkItem,
+  millraceApprovals = [],
 }: Props) {
   const panelOpen = useChatStore((s) => s.panelOpen);
   const openPanel = useChatStore((s) => s.openPanel);
@@ -40,6 +49,12 @@ export function StatusBar({
         <CwdBreadcrumb cwd={cwd} filePath={filePath} home={home} onCd={onCd} />
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
+        {millraceWorkItem ? (
+          <MillraceStatusChips
+            activeWorkItem={millraceWorkItem}
+            approvals={millraceApprovals}
+          />
+        ) : null}
         {detectedPreviewUrl && onOpenPreview ? (
           <button
             type="button"

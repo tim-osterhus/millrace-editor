@@ -40,6 +40,11 @@ import {
   type SearchInlineHandle,
   type SearchTarget,
 } from "@/modules/header";
+import {
+  PlanTraceInspector,
+  useMillraceWorkbench,
+  WorkItemRail,
+} from "@/modules/millrace";
 import { PreviewStack, type PreviewPaneHandle } from "@/modules/preview";
 import { openSettingsWindow } from "@/modules/settings/openSettingsWindow";
 import { usePreferencesStore } from "@/modules/settings/preferences";
@@ -154,6 +159,7 @@ export default function App() {
   const setLive = useChatStore((s) => s.setLive);
   const respondToApproval = useChatStore((s) => s.respondToApproval);
   const hasComposer = hasAnyKey(apiKeys);
+  const millrace = useMillraceWorkbench();
 
   const [keysLoaded, setKeysLoaded] = useState(false);
   useEffect(() => {
@@ -754,83 +760,101 @@ export default function App() {
                 collapsible
                 collapsedSize={0}
               >
-                <div className="h-full border-r border-border/60 bg-card">
-                  <FileExplorer
-                    rootPath={explorerRoot}
-                    onOpenFile={handleOpenFile}
-                    onPathRenamed={handlePathRenamed}
-                    onPathDeleted={handlePathDeleted}
-                    onRevealInTerminal={cdInNewTab}
-                    onAttachToAgent={handleAttachFileToAgent}
+                <div className="flex h-full flex-col border-r border-border/60 bg-card">
+                  <div className="min-h-0 flex-1">
+                    <FileExplorer
+                      rootPath={explorerRoot}
+                      onOpenFile={handleOpenFile}
+                      onPathRenamed={handlePathRenamed}
+                      onPathDeleted={handlePathDeleted}
+                      onRevealInTerminal={cdInNewTab}
+                      onAttachToAgent={handleAttachFileToAgent}
+                    />
+                  </div>
+                  <WorkItemRail
+                    snapshot={millrace.snapshot}
+                    activeWorkItemId={millrace.activeWorkItem.id}
+                    onSelectWorkItem={millrace.setActiveWorkItemId}
                   />
                 </div>
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel id="workspace" defaultSize="78%" minSize="30%">
                 <div className="flex h-full min-h-0 flex-col">
-                  <div className="relative min-h-0 flex-1">
-                    <div
-                      className={cn(
-                        "absolute inset-0 px-3 pt-2 pb-2",
-                        !isTerminalTab && "invisible pointer-events-none",
-                      )}
-                      aria-hidden={!isTerminalTab}
-                    >
-                      <TerminalStack
-                        tabs={tabs}
-                        activeId={activeId}
-                        registerHandle={registerTerminalHandle}
-                        onSearchReady={handleSearchReady}
-                        onCwd={handleTerminalCwd}
-                        onDetectedLocalUrl={handleDetectedLocalUrl}
-                        onExit={handleLeafExit}
-                        onTeraxOpen={handleTeraxOpen}
-                        onFocusLeaf={handleFocusLeaf}
-                      />
+                  <div className="flex min-h-0 flex-1">
+                    <div className="relative min-h-0 flex-1">
+                      <div
+                        className={cn(
+                          "absolute inset-0 px-3 pt-2 pb-2",
+                          !isTerminalTab && "invisible pointer-events-none",
+                        )}
+                        aria-hidden={!isTerminalTab}
+                      >
+                        <TerminalStack
+                          tabs={tabs}
+                          activeId={activeId}
+                          registerHandle={registerTerminalHandle}
+                          onSearchReady={handleSearchReady}
+                          onCwd={handleTerminalCwd}
+                          onDetectedLocalUrl={handleDetectedLocalUrl}
+                          onExit={handleLeafExit}
+                          onTeraxOpen={handleTeraxOpen}
+                          onFocusLeaf={handleFocusLeaf}
+                        />
+                      </div>
+                      <div
+                        className={cn(
+                          "absolute inset-0 px-3 pt-2 pb-2",
+                          !isEditorTab && "invisible pointer-events-none",
+                        )}
+                        aria-hidden={!isEditorTab}
+                      >
+                        <EditorStack
+                          tabs={tabs}
+                          activeId={activeId}
+                          registerHandle={registerEditorHandle}
+                          onDirtyChange={handleEditorDirty}
+                          onCloseTab={disposeTab}
+                        />
+                      </div>
+                      <div
+                        className={cn(
+                          "absolute inset-0 px-3 pt-2 pb-2",
+                          !isPreviewTab && "invisible pointer-events-none",
+                        )}
+                        aria-hidden={!isPreviewTab}
+                      >
+                        <PreviewStack
+                          tabs={tabs}
+                          activeId={activeId}
+                          registerHandle={registerPreviewHandle}
+                          onUrlChange={handlePreviewUrl}
+                        />
+                      </div>
+                      <div
+                        className={cn(
+                          "absolute inset-0 px-3 pt-2 pb-2",
+                          !isAiDiffTab && "invisible pointer-events-none",
+                        )}
+                        aria-hidden={!isAiDiffTab}
+                      >
+                        <AiDiffStack
+                          tabs={tabs}
+                          activeId={activeId}
+                          onAccept={(id) => respondToApproval(id, true)}
+                          onReject={(id) => respondToApproval(id, false)}
+                        />
+                      </div>
                     </div>
-                    <div
-                      className={cn(
-                        "absolute inset-0 px-3 pt-2 pb-2",
-                        !isEditorTab && "invisible pointer-events-none",
-                      )}
-                      aria-hidden={!isEditorTab}
-                    >
-                      <EditorStack
-                        tabs={tabs}
-                        activeId={activeId}
-                        registerHandle={registerEditorHandle}
-                        onDirtyChange={handleEditorDirty}
-                        onCloseTab={disposeTab}
-                      />
-                    </div>
-                    <div
-                      className={cn(
-                        "absolute inset-0 px-3 pt-2 pb-2",
-                        !isPreviewTab && "invisible pointer-events-none",
-                      )}
-                      aria-hidden={!isPreviewTab}
-                    >
-                      <PreviewStack
-                        tabs={tabs}
-                        activeId={activeId}
-                        registerHandle={registerPreviewHandle}
-                        onUrlChange={handlePreviewUrl}
-                      />
-                    </div>
-                    <div
-                      className={cn(
-                        "absolute inset-0 px-3 pt-2 pb-2",
-                        !isAiDiffTab && "invisible pointer-events-none",
-                      )}
-                      aria-hidden={!isAiDiffTab}
-                    >
-                      <AiDiffStack
-                        tabs={tabs}
-                        activeId={activeId}
-                        onAccept={(id) => respondToApproval(id, true)}
-                        onReject={(id) => respondToApproval(id, false)}
-                      />
-                    </div>
+
+                    <PlanTraceInspector
+                      activeWorkItem={millrace.activeWorkItem}
+                      plan={millrace.activePlan}
+                      traceEvents={millrace.traceEvents}
+                      approvals={millrace.approvals}
+                      evidence={millrace.evidence}
+                      loopPacks={millrace.snapshot.loopPacks}
+                    />
                   </div>
 
                   {keysLoaded ? (
@@ -870,6 +894,8 @@ export default function App() {
             onOpenPreview={() => {
               if (detectedPreviewUrl) openPreviewTab(detectedPreviewUrl);
             }}
+            millraceWorkItem={millrace.activeWorkItem}
+            millraceApprovals={millrace.approvals}
           />
 
           {hasComposer ? (
