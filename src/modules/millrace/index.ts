@@ -3,6 +3,7 @@ export {
   type MillraceApprovalContext,
 } from "./approvals/approvalContext";
 export { MillraceApprovalSummary } from "./approvals/MillraceApprovalSummary";
+export { GovernedWorkToggle } from "./composer/GovernedWorkToggle";
 export { MILLRACE_WORKBENCH_FIXTURE } from "./fixtures/workbenchFixture";
 export { useMillraceWorkbench } from "./hooks/useMillraceWorkbench";
 export { PlanTraceInspector } from "./plans/PlanTraceInspector";

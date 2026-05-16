@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverAnchor } from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { GovernedWorkToggle } from "@/modules/millrace";
 import {
   Cancel01Icon,
   CodeIcon,
@@ -150,6 +151,11 @@ export function AiInputBar() {
           }}
           commands={c.pickedCommands}
           onRemoveCommand={(name) => c.removeCommand(name)}
+        />
+
+        <GovernedWorkToggle
+          enabled={c.governedWorkEnabled}
+          onEnabledChange={c.setGovernedWorkEnabled}
         />
 
         <Popover open={pickerOpen}>

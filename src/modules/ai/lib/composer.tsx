@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { MILLRACE_WORKBENCH_FIXTURE } from "@/modules/millrace/fixtures/workbenchFixture";
 import {
   createContext,
   useContext,
@@ -54,6 +55,8 @@ type ComposerCtx = {
   stop: () => void;
   voice: Voice;
   canSend: boolean;
+  governedWorkEnabled: boolean;
+  setGovernedWorkEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Ctx = createContext<ComposerCtx | null>(null);
@@ -78,6 +81,7 @@ export function AiComposerProvider({ children }: ProviderProps) {
   const [files, setFiles] = useState<FileAttachment[]>([]);
   const [pickedSnippets, setPickedSnippets] = useState<Snippet[]>([]);
   const [pickedCommands, setPickedCommands] = useState<SlashCommandMeta[]>([]);
+  const [governedWorkEnabled, setGovernedWorkEnabled] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const focusSignal = useChatStore((s) => s.focusSignal);
@@ -270,6 +274,7 @@ export function AiComposerProvider({ children }: ProviderProps) {
     }
     const composed = [
       commandMarker ?? "",
+      governedWorkEnabled ? buildMillraceWorkContextBlock() : "",
       allSnippetBlocks.join("\n\n"),
       selectionBlocks.join("\n\n"),
       fileBlocks.join("\n\n"),
@@ -332,9 +337,67 @@ export function AiComposerProvider({ children }: ProviderProps) {
     stop,
     voice,
     canSend,
+    governedWorkEnabled,
+    setGovernedWorkEnabled,
   };
 
   return <Ctx.Provider value={ctx}>{children}</Ctx.Provider>;
+}
+
+function buildMillraceWorkContextBlock(): string {
+  const snapshot = MILLRACE_WORKBENCH_FIXTURE;
+  const activeWorkItem =
+    snapshot.workItems.find((item) => item.id === snapshot.activeWorkItemId) ??
+    snapshot.workItems[0];
+  const plan = snapshot.plans.find(
+    (candidate) => candidate.workItemId === activeWorkItem.id,
+  );
+  const traces = snapshot.traces.filter(
+    (event) => event.workItemId === activeWorkItem.id,
+  );
+  const approvals = snapshot.approvals.filter(
+    (approval) => approval.status === "requested",
+  );
+
+  return [
+    `<millrace-work id="${escapeXml(activeWorkItem.id)}" state="${escapeXml(
+      activeWorkItem.state,
+    )}" branch="${escapeXml(activeWorkItem.branch)}">`,
+    `<title>${escapeXml(activeWorkItem.title)}</title>`,
+    `<summary>${escapeXml(activeWorkItem.summary)}</summary>`,
+    plan
+      ? `<plan id="${escapeXml(plan.id)}">${plan.steps
+          .map(
+            (step) =>
+              `<step id="${escapeXml(step.id)}" state="${escapeXml(
+                step.state,
+              )}">${escapeXml(step.title)}</step>`,
+          )
+          .join("")}</plan>`
+      : "",
+    approvals
+      .map(
+        (approval) =>
+          `<approval id="${escapeXml(approval.id)}" workItemId="${escapeXml(
+            approval.workItemId,
+          )}" risk="${escapeXml(approval.risk)}">${escapeXml(
+            approval.target,
+          )}</approval>`,
+      )
+      .join(""),
+    `<trace-count>${traces.length}</trace-count>`,
+    "</millrace-work>",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 async function readAttachment(file: File): Promise<FileAttachment | null> {
