@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="public/logo.png" width="144" height="144" alt="Millrace Editor" />
+  <img src="public/logo-glow.png" width="144" height="144" alt="Millrace Editor" />
   <h1>Millrace Editor</h1>
 
-  <p><strong>Terax-derived AI-native development workbench with governed Millrace workflows</strong></p>
+  <p><strong>Terax-derived AI-native development workbench with Millrace-governed workflows</strong></p>
 
   <p>
     <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="license" />
@@ -13,19 +13,7 @@
 
 ---
 
-Millrace Editor is a desktop AI development workbench derived from Terax. It keeps the lightweight editor, terminal, file explorer, web preview, BYOK AI composer, approval cards, diff review, and local keychain model, then adds first-class Millrace work lifecycle surfaces for governed AI work: work items, plans, queues, approvals, traces, loop packs, repair, and evidence.
-
-## Screenshots
-
-<table>
-  <tr>
-    <td align="center"><img src="docs/terminal.png" alt="Terminal" /><br/><sub>Multi-tab terminal with WebGL rendering</sub></td>
-    <td align="center"><img src="docs/web-preview.png" alt="Web preview" /><br/><sub>Web preview of local dev servers</sub></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="docs/ai-workflow.png" alt="AI window" /><br/><sub>AI agentic workflow with edit diffs in the code editor</sub></td>
-  </tr>
-</table>
+Millrace Editor is a desktop AI development workbench derived from Terax. It keeps the editor, terminal, file explorer, web preview, BYOK AI composer, approval cards, diff review, and local keychain model, then adds an initial Millrace workbench layer for governed AI work: work items, plans, queues, approvals, traces, loop packs, and evidence.
 
 ## Features
 
@@ -61,10 +49,10 @@ Millrace Editor is a desktop AI development workbench derived from Terax. It kee
 - Plan and trace inspector beside the active editor/terminal workspace
 - Approval cards with work item, plan, evidence, trace, and risk context
 - Governed-work composer context attached to prompts by default
-- Fixture-backed Tauri bridge ready for the native Millrace runtime
+- M0 fixture-backed Tauri bridge ready to be replaced by the native Millrace runtime
 
 **Quality**
-- Lightweight and fast (~7 MB bundle)
+- Local-first desktop app with native shell, file, and keychain access through Tauri
 - API keys stored in the OS keychain 
 - No telemetry, no account required
 
@@ -86,7 +74,7 @@ The default shell is detected in this order: `pwsh.exe` (PowerShell 7+) → `pow
 
 ## Configure AI
 
-1. Open **Settings → AI**.
+1. Open **Settings → Models**.
 2. Pick a provider and paste your API key. For local inference, point Millrace Editor at your LM Studio endpoint.
 3. Keys are written to the OS keychain via `keyring` — they never touch disk or `localStorage`.
 
@@ -107,7 +95,7 @@ pnpm tauri build        # production bundle
 **Checks**
 ```bash
 pnpm exec tsc --noEmit          # frontend type-check
-cd src-tauri && cargo clippy    # Rust lint
+cd src-tauri && cargo clippy -- -D warnings
 ```
 
 ## Tech stack
