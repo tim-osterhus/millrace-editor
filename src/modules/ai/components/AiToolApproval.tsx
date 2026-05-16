@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
+  getFixtureApprovalContext,
+  MillraceApprovalSummary,
+} from "@/modules/millrace";
+import {
   Cancel01Icon,
   Edit02Icon,
   FileEditIcon,
@@ -35,6 +39,7 @@ function AiToolApprovalImpl({ part, toolName, onRespond }: Props) {
   const label = meta?.label ?? toolName;
   const Icon = meta?.icon ?? ToolsIcon;
   const input = part.input as Record<string, unknown>;
+  const millraceContext = getFixtureApprovalContext(toolName, input);
 
   return (
     <div className="rounded-lg border border-border bg-card shadow-sm">
@@ -53,6 +58,8 @@ function AiToolApprovalImpl({ part, toolName, onRespond }: Props) {
           needs approval
         </span>
       </div>
+
+      <MillraceApprovalSummary context={millraceContext} />
 
       <div className="px-3 py-2.5">
         <PreviewBlock toolName={toolName} input={input} />
@@ -180,4 +187,3 @@ function PreviewBlock({
     </pre>
   );
 }
-
