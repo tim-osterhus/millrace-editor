@@ -107,8 +107,9 @@ export function AiComposerProvider({ children }: ProviderProps) {
         void attachFileByPath(path);
       }
     };
-    window.addEventListener("terax:ai-attach-file", onAttach);
-    return () => window.removeEventListener("terax:ai-attach-file", onAttach);
+    window.addEventListener("millrace-editor:ai-attach-file", onAttach);
+    return () =>
+      window.removeEventListener("millrace-editor:ai-attach-file", onAttach);
     // attachFileByPath is stable for our purposes (closes over setFiles only)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

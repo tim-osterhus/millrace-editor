@@ -1,7 +1,7 @@
 import type { UIMessage } from "@ai-sdk/react";
 import { DirectChatTransport } from "ai";
 import { TERMINAL_BUFFER_LINES, type ModelId } from "../config";
-import { createTeraxAgent } from "./agent";
+import { createMillraceEditorAgent } from "./agent";
 import type { ProviderKeys } from "./keyring";
 import { native } from "./native";
 import type { ToolContext } from "../tools/tools";
@@ -65,7 +65,7 @@ export function createContextAwareTransport(deps: Deps) {
     }) {
       const live = deps.getLive();
       const projectMemory = await readMillraceEditorMd(live.workspaceRoot);
-      const agent = await createTeraxAgent({
+      const agent = await createMillraceEditorAgent({
         keys: deps.getKeys(),
         modelId: deps.getModelId(),
         customInstructions: deps.getCustomInstructions(),
@@ -86,7 +86,7 @@ export function createContextAwareTransport(deps: Deps) {
     async reconnectToStream(options: unknown) {
       const live = deps.getLive();
       const projectMemory = await readMillraceEditorMd(live.workspaceRoot);
-      const agent = await createTeraxAgent({
+      const agent = await createMillraceEditorAgent({
         keys: deps.getKeys(),
         modelId: deps.getModelId(),
         customInstructions: deps.getCustomInstructions(),
